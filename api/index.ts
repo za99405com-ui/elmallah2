@@ -1,6 +1,7 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import express from 'express';
 import app from '../server';
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
-  return app(req, res);
-}
+const server = express();
+server.use(app);
+
+export default server;
