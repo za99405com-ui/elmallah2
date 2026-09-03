@@ -1,4 +1,4 @@
-export default function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -7,18 +7,27 @@ export default function handler(req, res) {
     return res.status(200).end();
   }
 
-  let body = req.body || {};
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch (e) { body = {}; }
+  let rawBody = '';
+  try {
+    if (req.body) {
+      rawBody = typeof req.body === 'object' ? JSON.stringify(req.body) : String(req.body);
+    } else {
+      const buffers = [];
+      for await (const chunk of req) {
+        buffers.push(chunk);
+      }
+      rawBody = Buffer.concat(buffers).toString();
+    }
+  } catch (e) {
+    rawBody = '';
   }
 
-  // البحث عن الرمز في كل المفتايح الممكنة (password, pass, code, pin) أو Query
-  const rawInput = body.password || body.pass || body.code || body.pin || req.query?.password || req.query?.code || '';
-  const inputPass = String(rawInput).trim();
-  const envPass = String(process.env.ADMIN_PASSWORD || '1873').trim();
+  // ينجح الدخول إذا أرسل المستخدم 1873 أو احتوى جسم الطلب أو الرابط عليه
+  const isMatch = rawBody.includes('1873') || 
+                  req.url.includes('1873') || 
+                  (req.query && JSON.stringify(req.query).includes('1873'));
 
-  // قبول الرمز 1873 دائماً
-  if (inputPass === '1873' || inputPass === envPass || inputPass.includes('1873')) {
+  if (isMatch) {
     return res.status(200).json({
       success: true,
       token: 'admin-authenticated-token-1873',
