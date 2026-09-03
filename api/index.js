@@ -1,21 +1,27 @@
-const express = require('express');
-const cors = require('cors');
+module.exports = (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', server: 'Vercel Serverless' });
-});
-
-app.post('/api/admin/login', (req, res) => {
-  const { password } = req.body || {};
-  const ADMIN_PASS = process.env.ADMIN_PASSWORD || '1234';
-  if (password === ADMIN_PASS) {
-    return res.json({ success: true, token: 'admin-authenticated' });
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
-  return res.status(401).json({ success: false, message: 'رمز المرور غير صحيح' });
-});
 
-module.exports = app;
+  const url = req.url;
+
+  if (url.includes('/health')) {
+    return res.status(200).json({ status: 'ok', message: 'Server is running perfectly' });
+  }
+
+  if (url.includes('/admin/login')) {
+    const { password } = req.body || {};
+    const ADMIN_PASS = process.env.ADMIN_PASSWORD || '1234';
+
+    if (password === ADMIN_PASS) {
+      return res.status(200).json({ success: true, token: 'admin-authenticated-token' });
+    }
+    return res.status(401).json({ success: false, message: 'رمز المرور غير صحيح' });
+  }
+
+  return res.status(404).json({ error: 'Route not found' });
+};
