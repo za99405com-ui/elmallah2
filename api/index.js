@@ -12,10 +12,12 @@ export default function handler(req, res) {
     try { body = JSON.parse(body); } catch (e) { body = {}; }
   }
 
-  const password = body.password || (req.query ? req.query.password : null);
-  const ADMIN_PASS = process.env.ADMIN_PASSWORD || '1873';
+  // استخراج الباسورد وتنظيف الفراغات
+  const inputPass = String(body.password || body.pass || req.query?.password || '').trim();
+  const envPass = String(process.env.ADMIN_PASSWORD || '1873').trim();
 
-  if (String(password) === String(ADMIN_PASS) || String(password) === '1873') {
+  // قبول الدخول إذا طابق 1873 أو المتغير المعرف
+  if (inputPass === '1873' || inputPass === envPass) {
     return res.status(200).json({
       success: true,
       token: 'admin-authenticated-token-1873',
@@ -23,7 +25,7 @@ export default function handler(req, res) {
     });
   }
 
-  return res.status(200).json({
+  return res.status(401).json({
     success: false,
     message: 'رمز المرور غير صحيح'
   });
