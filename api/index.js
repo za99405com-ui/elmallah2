@@ -1,5 +1,5 @@
-import express from 'express';
-import cors from 'cors';
+const express = require('express');
+const cors = require('cors');
 
 const app = express();
 app.use(cors());
@@ -18,4 +18,4 @@ app.post('/api/admin/login', (req, res) => {
   return res.status(401).json({ success: false, message: 'رمز المرور غير صحيح' });
 });
 
-export default app;
+module.exports = app;
