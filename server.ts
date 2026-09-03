@@ -641,7 +641,7 @@ export async function createServer() {
     });
   }
 
-export default app;
+module.exports = app;
     console.log(`🐟 Al-Mallah Fish Store Backend Server running on http://0.0.0.0:${PORT}`);
   });
 
@@ -654,6 +654,6 @@ createServer().catch((err) => {
   process.exit(1);
 });
 
-export default app;
+module.exports = app;
 
-export default app;
+module.exports = app;
