@@ -641,3 +641,6 @@ export async function createServer() {
     });
 
 export default app;
+
+export default app;
+module.exports = app;
