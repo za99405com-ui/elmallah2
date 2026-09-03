@@ -12,12 +12,13 @@ export default function handler(req, res) {
     try { body = JSON.parse(body); } catch (e) { body = {}; }
   }
 
-  // استخراج الباسورد وتنظيف الفراغات
-  const inputPass = String(body.password || body.pass || req.query?.password || '').trim();
+  // البحث عن الرمز في كل المفتايح الممكنة (password, pass, code, pin) أو Query
+  const rawInput = body.password || body.pass || body.code || body.pin || req.query?.password || req.query?.code || '';
+  const inputPass = String(rawInput).trim();
   const envPass = String(process.env.ADMIN_PASSWORD || '1873').trim();
 
-  // قبول الدخول إذا طابق 1873 أو المتغير المعرف
-  if (inputPass === '1873' || inputPass === envPass) {
+  // قبول الرمز 1873 دائماً
+  if (inputPass === '1873' || inputPass === envPass || inputPass.includes('1873')) {
     return res.status(200).json({
       success: true,
       token: 'admin-authenticated-token-1873',
