@@ -641,7 +641,6 @@ export async function createServer() {
     });
   }
 
-  # if (process.env.NODE_ENV !== "production") { app.listen(process.env.PORT || 5000); }
 export default app;
     console.log(`🐟 Al-Mallah Fish Store Backend Server running on http://0.0.0.0:${PORT}`);
   });
@@ -657,5 +656,4 @@ createServer().catch((err) => {
 
 export default app;
 
-if (process.env.NODE_ENV !== 'production') { if (process.env.NODE_ENV !== "production") { app.listen(process.env.PORT || 5000); }
 export default app;
