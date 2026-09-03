@@ -639,25 +639,5 @@ export async function createServer() {
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
-  }
-
-module.exports = app;
-    console.log(`🐟 Al-Mallah Fish Store Backend Server running on http://0.0.0.0:${PORT}`);
-  });
-
-  return app;
-}
-
-// Auto-start if run directly
-createServer().catch((err) => {
-  console.error('Failed to start server:', err);
-  process.exit(1);
-});
-
-module.exports = app;
-
-module.exports = app;
-export default app;
-export default app;
 
 export default app;
